@@ -21,11 +21,14 @@ services:
         container_name: datak-search
         environment:
             ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+            ELASTIC_USERNAME: "elastic"
+            ELASTIC_PASSWORD: "elastic"
             TZ: Asia/Tehran
             node.name: es
             cluster.name: es-docker-cluster
             bootstrap.memory_lock: "true"
             discovery.type: single-node
+
         ulimits:
             memlock:
                 soft: -1
@@ -34,6 +37,7 @@ services:
             - elasticsearch_data:/usr/share/elasticsearch/data
         ports:
             - 9200:9200
+            - 9300:9300
         networks:
             - datak-ag
 
@@ -52,6 +56,5 @@ networks:
 
 volumes:
     elasticsearch_data:
-    db-data-percona:
     app:
 
