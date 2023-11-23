@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  postgres:
+    container_name: dag-postgres
+    image: postgres:15.2-alpine
+    environment:
+      POSTGRES_USER: datak_ag_db_user
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: datak_ag_db
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/create_tables.sql
+    networks:
+      - datak-ag
+    restart: unless-stopped
+
+  pgadmin:
+    container_name: dag-pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      TZ: 'Asia/Tehran'
+      PGTZ: 'Asia/Tehran'
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports:
+      - "8081:80"
+    networks:
+      - datak-ag
+    restart: unless-stopped
+
+
+networks:
+    datak-ag:
+
+volumes:
+  postgres:
+  pgadmin:
+

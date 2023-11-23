@@ -1,0 +1,57 @@
+version: "3.8"
+
+services:
+    app:
+        build:
+            context: ./
+            dockerfile: Dockerfile
+        image: datak-ag-alpine
+        container_name: dag-panel
+        restart: unless-stopped
+        working_dir: /var/www/html
+        tty: true
+        ports:
+            - "8080:8080"
+            - "443:443"
+        networks:
+            - datak-ag
+
+    elasticsearch:
+        image: elasticsearch:8.11.0
+        container_name: datak-search
+        environment:
+            ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+            TZ: Asia/Tehran
+            node.name: es
+            cluster.name: es-docker-cluster
+            bootstrap.memory_lock: "true"
+            discovery.type: single-node
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+        volumes:
+            - elasticsearch_data:/usr/share/elasticsearch/data
+        ports:
+            - 9200:9200
+        networks:
+            - datak-ag
+
+    redis:
+        image: redis:alpine
+        container_name: dag-redis
+        hostname: redis
+        networks:
+            - datak-ag
+        healthcheck:
+            test: [ "CMD", "redis-cli", "ping" ]
+            retries: 3
+            timeout: 5s
+networks:
+    datak-ag:
+
+volumes:
+    elasticsearch_data:
+    db-data-percona:
+    app:
+
