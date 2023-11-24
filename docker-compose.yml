@@ -10,6 +10,8 @@ services:
         restart: unless-stopped
         working_dir: /var/www/html
         tty: true
+        volumes:
+            - ./:/var/www/html
         ports:
             - "8080:8080"
             - "443:443"
@@ -28,6 +30,8 @@ services:
             cluster.name: es-docker-cluster
             bootstrap.memory_lock: "true"
             discovery.type: single-node
+            http.cors.enabled: "true"
+            http.cors.allow-origin: "http://localhost:9200"
 
         ulimits:
             memlock:
