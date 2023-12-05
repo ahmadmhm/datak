@@ -28,4 +28,6 @@ class News extends Model
     protected $casts = [
         'published_at' => 'datetime',
     ];
+
+
 }

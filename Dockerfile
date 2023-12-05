@@ -83,8 +83,8 @@ RUN chown -R www-data.www-data /var/www/html && \
   chown -R www-data.www-data /var/log/nginx
 
 # Install supercronic
-RUN curl -o /usr/local/bin/supercronic -L https://github.com/aptible/supercronic/releases/latest/download/supercronic-linux-amd64 && \
-    chmod +x /usr/local/bin/supercronic
+#RUN curl -o /usr/local/bin/supercronic -L https://github.com/aptible/supercronic/releases/latest/download/supercronic-linux-amd64 && \
+#    chmod +x /usr/local/bin/supercronic
 
 # Switch to use a non-root user from here on
 USER www-data
@@ -100,7 +100,6 @@ RUN chmod 777 -R storage/ \
  && chmod 777 phpunit-report.xml phpunit-coverage.xml \
  && touch database/database_test.sqlite
 
-RUN composer config http-basic.nova.laravel.com "farhad.eizakshiri@gmail.com" "7nnAS2DvcUnJi1PHjpoysdecUf9N7LIW8iSEhwoQ02VysMBj19"
 RUN composer install --no-autoloader
 
 EXPOSE 8080

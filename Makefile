@@ -1,5 +1,7 @@
 COMPOSE_FILES=./docker-compose.yml
 POSTGRES_COMPOSE_FILES=./.docker/docker-compose-postgres.yml
+NEW_ELASTIC_COMPOSE_FILES=./.docker/elk/docker-compose.yml
+ELASTIC_COMPOSE_FILES=./.docker/elk/docker-compose-elk.yml
 
 help:
 
@@ -50,7 +52,10 @@ build:
 	docker compose -f $(COMPOSE_FILES) build --no-cache
 
 up:
-	docker compose -f $(COMPOSE_FILES) -f $(POSTGRES_COMPOSE_FILES) up -d app redis postgres pgadmin elasticsearch
+	docker compose -f $(COMPOSE_FILES) -f $(POSTGRES_COMPOSE_FILES) -f $(ELASTIC_COMPOSE_FILES) up -d app redis postgres pgadmin elasticsearch kibana
+
+up-el:
+	docker compose -f $(ELASTIC_COMPOSE_FILES) up -d elasticsearch kibana
 
 down:
 	docker compose -f $(COMPOSE_FILES) -f $(POSTGRES_COMPOSE_FILES) down

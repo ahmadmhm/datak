@@ -18,33 +18,6 @@ services:
         networks:
             - datak-ag
 
-    elasticsearch:
-        image: elasticsearch:8.11.0
-        container_name: datak-search
-        environment:
-            ES_JAVA_OPTS: "-Xmx256m -Xms256m"
-            ELASTIC_USERNAME: "elastic"
-            ELASTIC_PASSWORD: "elastic"
-            TZ: Asia/Tehran
-            node.name: es
-            cluster.name: es-docker-cluster
-            bootstrap.memory_lock: "true"
-            discovery.type: single-node
-            http.cors.enabled: "true"
-            http.cors.allow-origin: "http://localhost:9200"
-
-        ulimits:
-            memlock:
-                soft: -1
-                hard: -1
-        volumes:
-            - elasticsearch_data:/usr/share/elasticsearch/data
-        ports:
-            - 9200:9200
-            - 9300:9300
-        networks:
-            - datak-ag
-
     redis:
         image: redis:alpine
         container_name: dag-redis
@@ -59,6 +32,5 @@ networks:
     datak-ag:
 
 volumes:
-    elasticsearch_data:
     app:
 
