@@ -16,8 +16,8 @@ class SearchController extends ApiController
 
     public function index(SearchArticleRequest $request)
     {
-        News::factory(200)->create();
-        $n = News::search('title:(Ms. OR Mr.)')->raw();
+        News::factory(100)->create();
+        $n = News::search('')->raw();
         dd($n);
         $articles = $this->articleService->generateQuery();
         $this->articleService->applyFilter($articles, $request);
