@@ -4,15 +4,15 @@
 #
 server.name: kibana
 server.host: 0.0.0.0
-elasticsearch.hosts: [ http://elasticsearch:9200 ]
+elasticsearch.hosts: [ http://datak-search:9200 ]
 
 monitoring.ui.container.elasticsearch.enabled: true
 monitoring.ui.container.logstash.enabled: true
 
 ## X-Pack security credentials
 #
-elasticsearch.username: kibana_system
-elasticsearch.password: ${KIBANA_SYSTEM_PASSWORD}
+elasticsearch.username: elk
+elasticsearch.password: elastic
 
 ## Encryption keys (optional but highly recommended)
 ##
@@ -36,7 +36,7 @@ xpack.fleet.outputs:
   - id: fleet-default-output
     name: default
     type: elasticsearch
-    hosts: [ http://elasticsearch:9200 ]
+    hosts: [ http://datak-search:9200 ]
     is_default: true
     is_default_monitoring: true
 
