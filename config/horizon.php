@@ -195,12 +195,6 @@ return [
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 3,
             ],
-            'supervisor-2' => [
-                'processes' => 1,
-                'maxProcesses' => 1,
-                'balanceMaxShift' => 1,
-                'balanceCooldown' => 3,
-            ],
         ],
 
         'local' => [

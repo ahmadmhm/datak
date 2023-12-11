@@ -1,50 +1,50 @@
-FROM alpine:3.18
+FROM alpine:3.19
 
-ARG ALPINE_VERSION=3.18
+ARG ALPINE_VERSION=3.19
 
-LABEL Maintainer="Morteza Fathi <mortezaa.fathi@gmail.com>" \
+LABEL Maintainer="Ahmad Mohammadi <ahmadmohammadi940@gmail.com>" \
       Description="Lightweight container with Nginx 1.24 based on Alpine Linux."
 
 RUN echo https://mirrors.pardisco.co/alpine/v$ALPINE_VERSION/main > /etc/apk/repositories
 RUN echo https://mirrors.pardisco.co/alpine/v$ALPINE_VERSION/community >> /etc/apk/repositories
 
 # Install packages and remove default server definition
-RUN apk add --no-cache php82 \
-    php82-common \
-    php82-fpm \
-    php82-pdo \
-    php82-opcache \
-    php82-zip \
-    php82-phar \
-    php82-iconv \
-    php82-cli \
-    php82-curl \
-    php82-openssl \
-    php82-mbstring \
-    php82-tokenizer \
-    php82-fileinfo \
-    php82-json \
-    php82-xml \
-    php82-xmlwriter \
-    php82-xmlreader \
-    php82-simplexml \
-    php82-dom \
-    php82-pdo_pgsql \
-    php82-pdo_mysql \
-    php82-pdo_sqlite \
-    php82-pecl-redis \
-    php82-posix \
-    php82-pcntl \
-    php82-bcmath \
-    php82-ctype \
-    php82-gmp \
-    php82-gd \
-    php82-zlib \
-    php82-intl \
-    php82-ctype \
-    php82-exif \
-    php82-soap \
-    php82-sockets
+RUN apk add --no-cache php83 \
+    php83-common \
+    php83-fpm \
+    php83-pdo \
+    php83-opcache \
+    php83-zip \
+    php83-phar \
+    php83-iconv \
+    php83-cli \
+    php83-curl \
+    php83-openssl \
+    php83-mbstring \
+    php83-tokenizer \
+    php83-fileinfo \
+    php83-json \
+    php83-xml \
+    php83-xmlwriter \
+    php83-xmlreader \
+    php83-simplexml \
+    php83-dom \
+    php83-pdo_pgsql \
+    php83-pdo_mysql \
+    php83-pdo_sqlite \
+    php83-pecl-redis \
+    php83-posix \
+    php83-pcntl \
+    php83-bcmath \
+    php83-ctype \
+    php83-gmp \
+    php83-gd \
+    php83-zlib \
+    php83-intl \
+    php83-ctype \
+    php83-exif \
+    php83-soap \
+    php83-sockets
 
 RUN apk add --no-cache nginx \
     supervisor \
@@ -55,17 +55,17 @@ RUN apk add --no-cache nginx \
     vim \
     htop
 
-RUN ln -s /usr/bin/php82 /usr/bin/php
+RUN ln -sf /usr/bin/php83 /usr/bin/php
 
 # Install PHP tools
-COPY --from=composer:2.6.5 /usr/bin/composer /usr/local/bin/composer
+COPY --from=composer:2.7.7 /usr/bin/composer /usr/local/bin/composer
 
 # Configure nginx
 COPY .docker/prod/config/nginx.conf /etc/nginx/nginx.conf
 
 # Configure PHP-FPM
-COPY .docker/prod/config/fpm-pool.conf /etc/php82/php-fpm.d/www.conf
-COPY .docker/prod/config/php.ini /etc/php82/conf.d/custom.ini
+COPY .docker/prod/config/fpm-pool.conf /etc/php83/php-fpm.d/www.conf
+COPY .docker/prod/config/php.ini /etc/php83/conf.d/custom.ini
 
 # Configure supervisord
 COPY .docker/prod/config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
@@ -83,8 +83,8 @@ RUN chown -R www-data.www-data /var/www/html && \
   chown -R www-data.www-data /var/log/nginx
 
 # Install supercronic
-#RUN curl -o /usr/local/bin/supercronic -L https://github.com/aptible/supercronic/releases/latest/download/supercronic-linux-amd64 && \
-#    chmod +x /usr/local/bin/supercronic
+RUN curl -o /usr/local/bin/supercronic -L https://github.com/aptible/supercronic/releases/latest/download/supercronic-linux-amd64 && \
+    chmod +x /usr/local/bin/supercronic
 
 # Switch to use a non-root user from here on
 USER www-data

@@ -7,7 +7,7 @@ services:
     container_name: datak-search
     environment:
       ES_JAVA_OPTS: "-Xms512m -Xmx512m"
-      ELASTIC_USERNAME: "elastic"
+      ELASTIC_USERNAME: "elk"
       ELASTIC_PASSWORD: "elastic"
       TZ: Asia/Tehran
       node.name: es
@@ -19,6 +19,7 @@ services:
         soft: -1
         hard: -1
     volumes:
+      - ./.docker/elk/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,Z
       - elasticsearch_data:/usr/share/elasticsearch/data
     ports:
       - "9200:9200"
@@ -51,6 +52,8 @@ services:
       - elasticsearch
     ports:
       - "5601:5601"
+    volumes:
+      - ./.docker/elk/kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro,Z
     networks:
       - datak-ag
     restart: unless-stopped

@@ -1,8 +1,10 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 return [
     'storage' => [
-        'default_path' => env('ELASTIC_MIGRATIONS_DEFAULT_PATH', base_path('.docker/elk/elasticsearch/migrations'))
+        'default_path' => env('ELASTIC_MIGRATIONS_DEFAULT_PATH', base_path('.docker/elk/elasticsearch/migrations')),
     ],
     'database' => [
         'table' => env('ELASTIC_MIGRATIONS_TABLE', 'elastic_migrations'),
