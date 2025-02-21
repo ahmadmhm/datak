@@ -14,11 +14,10 @@ class ElasticsearchService
             ->build();
     }
 
-    public function indexDocument($index, $id, $data)
+    public function indexDocument($index, $data)
     {
         $params = [
             'index' => $index,
-            //            'id' => $id,
             'body' => array_merge($data, [
                 'datetime' => now(),
                 'timestamp_ts' => now()->timestamp,
@@ -36,7 +35,7 @@ class ElasticsearchService
             'size' => 200,
             'body' => [
                 'query' => [
-                    'match_all' => new \stdClass, // returns all documents
+                    'match_all' => new \stdClass,
                 ],
             ],
         ]);
@@ -69,35 +68,38 @@ class ElasticsearchService
             $dateRange['lte'] = $query['dateTo'];
         }
         if (! empty($query['source'])) {
-            $filter[] = [
-                'term' => ['source' => $query['source']],
+            $filter[] = ['term' => ['source' => $query['source']]];
+        }
+        if (! empty($query['user_id'])) {
+            $filter[] = ['term' => ['user_id' => $query['user_id']]];
+        }
+        if (! empty($dateRange)) {
+            $rangeConditions = [
+                [
+                    'bool' => [
+                        'must' => [
+                            ['exists' => ['field' => 'date']],
+                            ['range' => ['date' => $dateRange]],
+                        ],
+                    ],
+                ],
+                [
+                    'bool' => [
+                        'must' => [
+                            ['exists' => ['field' => 'post_date']],
+                            ['range' => ['post_date' => $dateRange]],
+                        ],
+                    ],
+                ],
             ];
         }
-        $rangeConditions = [
-            [
+        if (! empty($rangeConditions)) {
+            $filter[] = [
                 'bool' => [
-                    'must' => [
-                        ['exists' => ['field' => 'date']],
-                        ['range' => ['date' => $dateRange]],
-                    ],
+                    'should' => $rangeConditions,
                 ],
-            ],
-            [
-                'bool' => [
-                    'must' => [
-                        ['exists' => ['field' => 'post_date']],
-                        ['range' => ['post_date' => $dateRange]],
-                    ],
-                ],
-            ],
-        ];
-
-        // Use a 'should' clause so that if either condition matches, the document is returned.
-        $filter[] = [
-            'bool' => [
-                'should' => $rangeConditions,
-            ],
-        ];
+            ];
+        }
 
         // Assemble the complete query.
         $queryBody = [
@@ -109,7 +111,7 @@ class ElasticsearchService
             ],
         ];
 
-        $size = $query['size'] ?? 100;
+        $size = $query['size'] ?? 200;
 
         return [$size, $queryBody];
     }
@@ -119,7 +121,7 @@ class ElasticsearchService
         return match ($response->getStatusCode()) {
             Response::HTTP_OK, Response::HTTP_CREATED => [
                 'success' => true,
-                'data' => $response->asString() != '' ? $response->asArray()['hits']['hits'] : [],
+                'data' => $response->asString() != '' ? ($response->asArray()['hits']['hits'] ?? []) : [],
             ],
             Response::HTTP_NOT_FOUND, Response::HTTP_INTERNAL_SERVER_ERROR => [
                 'success' => false,

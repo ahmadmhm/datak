@@ -9,6 +9,9 @@ class NewsResource extends JsonResource
     public function toArray($request)
     {
         $resource = $this->resource['_source'];
+        if (! isset($resource['text'])) {
+            return [];
+        }
 
         return [
             'id' => $this['_id'],
