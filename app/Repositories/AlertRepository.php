@@ -17,11 +17,13 @@ class AlertRepository
     {
         $alerts = collect($this->getUserAlerts($userId));
 
-        return $alerts->firstWhere('_source.source', $source) != null;
+        return $alerts->where('_source.source', $source)->where('_source.user_id', $userId)->first() != null;
     }
 
     public function storeUserAlert(int $userId, string $source): bool
     {
+        dd($userId, $source);
+
         return $this->elasticService->indexDocument(config('index.alert.name'), [
             'user_id' => $userId,
             'source' => $source,

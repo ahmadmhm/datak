@@ -13,10 +13,10 @@ class AlertController extends ApiController
     public function store(AlertRequest $request)
     {
         $queryData = [
-            'user_id' => 1,
+            'user_id' => config('index.alert.default_user'),
             'source' => $request->validated()['name'],
         ];
-        $alerts = $this->alertRepository->getUserAlerts(1);
+        $alerts = $this->alertRepository->getUserAlerts($queryData['user_id']);
         if (count($alerts) >= config('index.alert.max_count')) {
             return $this->generateErrorResponse([], 'You have reached to maximum alert count');
         }

@@ -26,7 +26,7 @@ class ElasticsearchService
         ];
         try {
             $response = $this->client->index($params);
-            app(NewsObserver::class, ['userId' => 1])->created($index);
+            app(NewsObserver::class, ['userId' => config('index.alert.default_user')])->created($index);
 
             return $this->responseHandler($response)['success'];
         } catch (\Exception $exception) {
@@ -58,6 +58,11 @@ class ElasticsearchService
         ]);
 
         return $this->responseHandler($result);
+    }
+
+    public function flushIndex(string $index): void
+    {
+        $this->client->indices()->flush(['index' => $index]);
     }
 
     protected function applyFilters($query): array
