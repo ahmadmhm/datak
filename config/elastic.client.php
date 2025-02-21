@@ -6,9 +6,7 @@ return [
     'default' => env('ELASTIC_CONNECTION', 'default'),
     'connections' => [
         'default' => [
-            'hosts' => [
-                env('ELASTIC_HOST', 'localhost:9200'),
-            ],
+            'host' => env('ELASTIC_HOST', 'localhost:9200'),
             'basicAuthentication' => [
                 env('ELASTIC_USERNAME'),
                 env('ELASTIC_PASSWORD'),

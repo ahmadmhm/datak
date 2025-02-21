@@ -14,7 +14,6 @@ services:
             - ./:/var/www/html
         ports:
             - "8080:8080"
-            - "443:443"
         networks:
             - datak-ag
 

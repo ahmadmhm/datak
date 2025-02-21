@@ -12,7 +12,7 @@ class ArticleResource extends JsonResource
         return [
             'id' => $this->id,
             'resource' => $this->load_resource->value,
-            'source' => new SourceResource($this->whenLoaded('source')),
+            'source' => new NewsResource($this->whenLoaded('source')),
             'author' => $this->author,
             'title' => $this->title,
             'description' => $this->description,
