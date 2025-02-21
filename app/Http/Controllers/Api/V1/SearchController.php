@@ -3,22 +3,21 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Api\ApiController;
-use App\Http\Requests\V1\SearchArticleRequest;
-use App\Services\SearchService;
+use App\Http\Requests\V1\SearchRequest;
+use App\Http\Resources\V1\NewsResource;
+use App\Services\ElasticsearchService;
 
 class SearchController extends ApiController
 {
-    public function __construct(protected $articleService = null)
-    {
-        $this->articleService = app(SearchService::class);
-    }
+    public function __construct(protected ?ElasticsearchService $elasticService = null) {}
 
-    public function index(SearchArticleRequest $request)
+    public function index(SearchRequest $request)
     {
-        $articles = $this->articleService->generateQuery();
-        $this->articleService->applyFilter($articles, $request);
-        $articles = $articles->paginate(100);
+        $news = $this->elasticService->search('news,instagram,twitter', $request->validated());
+        if ($news['success']) {
+            return $this->generateResponse(NewsResource::collection($news['data']), true);
+        }
 
-        return $this->generateResponse($articles, true);
+        return $this->generateErrorResponse([], 'No data are found');
     }
 }

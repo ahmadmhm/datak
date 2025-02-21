@@ -11,8 +11,8 @@ trait ApiResponse
 
         return response()->json([
             'message' => $message,
-            'data' => $additional ? $data->items() : $data,
-            'additional' => $additional ? $this->getAdditional($data) : null,
+            'data' => $data,
+            'additional' => $additional ? ['count' => count($data)] : null,
         ]);
     }
 
@@ -23,18 +23,5 @@ trait ApiResponse
             'message' => $message,
             'data' => $data,
         ], $code);
-    }
-
-    public function getAdditional($data): array
-    {
-        try {
-            return [
-                'total' => $data->total(),
-                'per_page' => $data->perPage(),
-                'current_page' => $data->currentPage(),
-            ];
-        } catch (\Exception $e) {
-            return [];
-        }
     }
 }

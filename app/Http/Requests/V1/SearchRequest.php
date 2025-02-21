@@ -2,29 +2,24 @@
 
 namespace App\Http\Requests\V1;
 
-use App\Enums\ArticleResource;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class SearchArticleRequest extends FormRequest
+class SearchRequest extends FormRequest
 {
     public function rules(): array
     {
         return [
             'source' => [
-                'array', 'nullable', Rule::exists('sources', 'title'),
+                'string', 'nullable',
             ],
-            'authors' => [
-                'array', 'nullable',
+            'context' => [
+                'string', 'nullable',
             ],
             'dateFrom' => [
                 'date', 'nullable',
             ],
             'dateTo' => [
                 'date', 'nullable',
-            ],
-            'resource' => [
-                'string', 'nullable', Rule::enum(ArticleResource::class),
             ],
         ];
     }
