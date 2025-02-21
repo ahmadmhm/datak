@@ -10,7 +10,7 @@ class AlertRequest extends FormRequest
     {
         return [
             'name' => [
-                'nullable', 'string',
+                'required', 'string',
             ],
         ];
     }

@@ -3,6 +3,6 @@
 return [
     'alert' => [
         'name' => 'alerts',
-        'max_count' => 10,
+        'max_count' => env('MAX_USER_ALERT', 10),
     ],
 ];

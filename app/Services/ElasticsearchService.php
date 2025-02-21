@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Observers\NewsObserver;
 use Elastic\Elasticsearch\ClientBuilder;
 use Illuminate\Http\Response;
 
@@ -23,9 +24,14 @@ class ElasticsearchService
                 'timestamp_ts' => now()->timestamp,
             ]),
         ];
-        $response = $this->client->index($params);
+        try {
+            $response = $this->client->index($params);
+            app(NewsObserver::class, ['userId' => 1])->created($index);
 
-        return $this->responseHandler($response)['success'];
+            return $this->responseHandler($response)['success'];
+        } catch (\Exception $exception) {
+            return false;
+        }
     }
 
     public function getAll($indexes, $query)
